@@ -1,10 +1,30 @@
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, Text, View, FlatList} from 'react-native';
+import {baseUrl, token} from "../../env";
 
 const MovieList = () => {
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    fetch(`${baseUrl}/api/movies/`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Token ${token}`
+      }
+    })
+      .then(res => res.json())
+      .then(movies => setMovies(movies))
+      .catch(error => console.log(error))
+  }, [])
+
   return (
     <View style={styles.container}>
-      <Text>This will be a list</Text>
+      <FlatList
+        data={movies}
+        renderItem={item => (
+          <Text key={item.id}>{item.title}</Text>
+        )}
+      />
     </View>
   );
 }
