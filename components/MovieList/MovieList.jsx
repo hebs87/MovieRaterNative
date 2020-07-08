@@ -21,7 +21,7 @@ const MovieList = () => {
     <View style={styles.container}>
       <FlatList
         data={movies}
-        renderItem={item => (
+        renderItem={({item}) => (
           <Text key={item.id}>{item.title}</Text>
         )}
       />
