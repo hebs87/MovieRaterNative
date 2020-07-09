@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, FlatList} from 'react-native';
+import {StyleSheet, Text, View, FlatList, Image} from 'react-native';
 import {baseUrl, token} from "../../env";
 
 const MovieList = () => {
@@ -20,7 +20,7 @@ const MovieList = () => {
   }, [])
 
   return (
-    <View style={styles.container}>
+    <View>
       {
         loading &&
         <Text>Loading...</Text>
@@ -31,7 +31,9 @@ const MovieList = () => {
           keyExtractor={item => item.uuid}
           data={movies}
           renderItem={({item}) => (
-            <Text>{item.title}</Text>
+            <View style={styles.item}>
+              <Text style={styles.itemText}>{item.title}</Text>
+            </View>
           )}
         />
       }
@@ -45,6 +47,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  item: {
+    flex: 1,
+    padding: 10,
+    height: 50,
+    backgroundColor: '#282C35',
+  },
+  itemText: {
+    color: '#fff',
+    fontSize: 24,
   },
 });
 
