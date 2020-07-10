@@ -1,10 +1,13 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
-const Details = () => {
+const Details = (props) => {
+  // We get the relevant prop (1st argument) and specify a default (2nd argument)
+  const movie = props.navigation.getParam('movie', null);
+
   return (
     <View>
-      <Text>Details</Text>
+      <Text>Details about {movie.title}</Text>
     </View>
   );
 }

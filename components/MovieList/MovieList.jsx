@@ -1,8 +1,15 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, FlatList, Image} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import MovieRaterLogo from '../../assets/movie-rater-logo.png';
 
-const MovieList = () => {
+const MovieList = (props) => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -18,6 +25,11 @@ const MovieList = () => {
       .then(() => setLoading(false))
       .catch(error => console.log(error))
   }, [])
+
+  const selectedMovie = movie => {
+    // Specify the component we want to pass our params to (the components in the AppNavigator in App.js
+    props.navigation.navigate("Details", {movie});
+  }
 
   return (
     <View>
@@ -36,9 +48,11 @@ const MovieList = () => {
           keyExtractor={item => item.uuid}
           data={movies}
           renderItem={({item}) => (
-            <View style={styles.item}>
-              <Text style={styles.itemText}>{item.title}</Text>
-            </View>
+            <TouchableOpacity onPress={() => selectedMovie(item)}>
+              <View style={styles.item}>
+                <Text style={styles.itemText}>{item.title}</Text>
+              </View>
+            </TouchableOpacity>
           )}
         />
       }
