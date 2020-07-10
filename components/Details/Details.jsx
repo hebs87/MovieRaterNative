@@ -8,8 +8,7 @@ const Details = (props) => {
   const movie = props.navigation.getParam('movie', null);
 
   return (
-    <View>
-      <Text>{movie.title}</Text>
+    <View style={styles.container}>
       <View style={styles.ratingContainer}>
         <FontAwesomeIcon style={movie.avg_rating > 0 ? styles.orange : styles.grey} icon={faStar}/>
         <FontAwesomeIcon style={movie.avg_rating > 1 ? styles.orange : styles.grey} icon={faStar}/>
@@ -18,31 +17,34 @@ const Details = (props) => {
         <FontAwesomeIcon style={movie.avg_rating > 4 ? styles.orange : styles.grey} icon={faStar}/>
         <Text style={styles.numRatings}>({movie.no_of_ratings})</Text>
       </View>
-      <Text>{movie.description}</Text>
+      <Text style={styles.description}>{movie.description}</Text>
     </View>
   );
 }
 
+Details.navigationOptions = screenProps => ({
+  title: screenProps.navigation.getParam('title'),
+  headerStyle: {
+    backgroundColor: 'orange',
+  },
+  headerTintColor: '#fff',
+  headerTitleStyle: {
+    fontWeight: 'bold',
+    fontSize: 24,
+  },
+  headerTitleAlign: 'center',
+});
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logo: {
-    width: '100%',
-    marginTop: 30,
-  },
-  item: {
-    flex: 1,
-    padding: 10,
-    height: 50,
     backgroundColor: '#282C35',
+    padding: 10,
   },
-  itemText: {
-    color: '#fff',
-    fontSize: 24,
+  description: {
+    fontSize: 20,
+    padding: 10,
+    color: 'white',
   },
   ratingContainer: {
     display: 'flex',
@@ -58,6 +60,7 @@ const styles = StyleSheet.create({
   },
   numRatings: {
     marginLeft: 5,
+    color: 'white',
   },
 });
 
