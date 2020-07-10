@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View, FlatList, Image} from 'react-native';
+import MovieRaterLogo from '../../assets/movie-rater-logo.png';
 
 const MovieList = () => {
   const [movies, setMovies] = useState([]);
@@ -20,6 +21,11 @@ const MovieList = () => {
 
   return (
     <View>
+      <Image
+        source={MovieRaterLogo}
+        style={styles.logo}
+        reziseMode='contain'
+      />
       {
         loading &&
         <Text>Loading...</Text>
@@ -46,6 +52,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  logo: {
+    width: '100%',
+    marginTop: 30,
   },
   item: {
     flex: 1,
