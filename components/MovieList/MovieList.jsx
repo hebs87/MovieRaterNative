@@ -1,16 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View, FlatList, Image} from 'react-native';
-import {baseUrl, token} from "../../env";
 
 const MovieList = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${baseUrl}/api/movies/`, {
+    fetch(`${process.env.BASE_URL}/api/movies/`, {
       method: 'GET',
       headers: {
-        'Authorization': `Token ${token}`
+        'Authorization': `Token ${process.env.TOKEN}`
       }
     })
       .then(res => res.json())
