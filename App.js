@@ -1,26 +1,12 @@
 import React from 'react';
 import MovieList from "./components/MovieList/MovieList";
-import {StyleSheet, Text, View, FlatList, Image} from 'react-native';
-import MovieRaterLogo from './assets/movie-rater-logo.png';
+import {createAppContainer} from "react-navigation";
+import {createStackNavigator} from "react-navigation-stack";
 
-const App = () => {
-  return (
-    <View>
-      <Image
-        source={MovieRaterLogo}
-        style={styles.logo}
-        reziseMode='contain'
-      />
-      <MovieList/>
-    </View>
-  );
-}
+const AppNavigator = createStackNavigator({
+  MovieList: {screen: MovieList},
+})
 
-const styles = StyleSheet.create({
-  logo: {
-    width: '100%',
-    marginTop: 30,
-  },
-});
+const App = createAppContainer(AppNavigator);
 
 export default App;
