@@ -7,29 +7,44 @@ import {
   Image,
   TouchableOpacity,
   Button,
+  AsyncStorage,
 } from 'react-native';
 import MovieRaterLogo from '../../assets/movie-rater-logo.png';
 
 const MovieList = (props) => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
+  let TOKEN = null;
 
   useEffect(() => {
+    getData();
+  }, [])
+
+  const getData = async () => {
+    TOKEN = await AsyncStorage.getItem('TOKEN');
+    if (TOKEN) {
+      getMovieList();
+    } else {
+      props.navigation.navigate('Auth');
+    }
+  }
+
+  const getMovieList = () => {
     fetch(`${process.env.BASE_URL}/api/movies/`, {
       method: 'GET',
       headers: {
-        'Authorization': `Token ${process.env.TOKEN}`
+        'Authorization': `Token ${TOKEN}`
       }
     })
       .then(res => res.json())
       .then(movies => setMovies(movies))
       .then(() => setLoading(false))
       .catch(error => console.log(error))
-  })
+  }
 
   const selectedMovie = movie => {
     // Specify the component we want to pass our params to (the components in the AppNavigator in App.js
-    props.navigation.navigate("Details", {movie, title: movie.title});
+    props.navigation.navigate("Details", {movie, title: movie.title, TOKEN});
   }
 
   return (
