@@ -8,20 +8,37 @@ const Edit = (props) => {
   const [description, setDescription] = useState(movie.description);
 
   const saveMovie = () => {
-    fetch(`${process.env.BASE_URL}/api/movies/${movie.id}/`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Token ${process.env.TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        title,
-        description,
+    if (movie.id) {
+      fetch(`${process.env.BASE_URL}/api/movies/${movie.id}/`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Token ${process.env.TOKEN}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title,
+          description,
+        })
       })
-    })
-      .then(res => res.json())
-      .then(movie => props.navigation.navigate("Details", {movie, title: movie.title}))
-      .catch(error => console.log(error))
+        .then(res => res.json())
+        .then(movie => props.navigation.navigate("Details", {movie, title: movie.title}))
+        .catch(error => console.log(error))
+    } else {
+      fetch(`${process.env.BASE_URL}/api/movies/`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Token ${process.env.TOKEN}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title,
+          description,
+        })
+      })
+        .then(res => res.json())
+        .then(() => props.navigation.navigate("MovieList"))
+        .catch(error => console.log(error))
+    }
   }
 
   return (
@@ -41,7 +58,7 @@ const Edit = (props) => {
         value={description}
       />
       <Button
-        title='Save'
+        title={movie.id ? 'Edit' : 'Add'}
         color='orange'
         onPress={() => saveMovie()}
       />
