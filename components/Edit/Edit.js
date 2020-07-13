@@ -1,7 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, Button} from 'react-native';
-import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
-import {faStar} from "@fortawesome/free-solid-svg-icons/faStar";
+import {StyleSheet, Text, View} from 'react-native';
 
 const Edit = (props) => {
   // We get the relevant prop (1st argument) and specify a default (2nd argument)
