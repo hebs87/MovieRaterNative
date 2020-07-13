@@ -8,7 +8,20 @@ const Edit = (props) => {
   const [description, setDescription] = useState(movie.description);
 
   const saveMovie = () => {
-    props.navigation.goBack();
+    fetch(`${process.env.BASE_URL}/api/movies/${movie.id}/`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Token ${process.env.TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title,
+        description,
+      })
+    })
+      .then(res => res.json())
+      .then(movie => props.navigation.navigate("Details", {movie, title: movie.title}))
+      .catch(error => console.log(error))
   }
 
   return (
