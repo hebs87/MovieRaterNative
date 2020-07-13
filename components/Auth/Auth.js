@@ -1,27 +1,50 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, TextInput, Button, AsyncStorage} from 'react-native';
+import {StyleSheet, Text, View, TextInput, Button, AsyncStorage, TouchableOpacity} from 'react-native';
 
 const Auth = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [registerView, setRegisterView] = useState(false);
 
-  useEffect(() => {getData();}, [])
+  useEffect(() => {getData();}, []);
+
+  const toggleView = () => {
+    setRegisterView(!registerView);
+  }
 
   const submit = () => {
-    fetch(`${process.env.BASE_URL}/auth/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username,
-        password,
+    if (!registerView) {
+      // LOGIN
+      fetch(`${process.env.BASE_URL}/auth/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        })
       })
-    })
-      .then(res => res.json())
-      .then(res => saveToken(res.token))
-      .then(() => props.navigation.navigate('MovieList'))
-      .catch(error => console.log(error))
+        .then(res => res.json())
+        .then(res => saveToken(res.token))
+        .then(() => props.navigation.navigate('MovieList'))
+        .catch(error => console.log(error))
+    } else {
+      // REGISTER
+      fetch(`${process.env.BASE_URL}/api/users/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        })
+      })
+        .then(res => res.json())
+        .then(() => setRegisterView(false))
+        .catch(error => console.log(error))
+    }
   }
 
   const saveToken = async token => {
@@ -53,10 +76,20 @@ const Auth = (props) => {
         secureTextEntry
       />
       <Button
-        title='Login'
+        title={registerView ? 'Register' : 'Login'}
         color='orange'
         onPress={() => submit()}
       />
+      <TouchableOpacity onPress={() => toggleView()}>
+        {
+          !registerView &&
+          <Text style={styles.label}>Don't have an account? Register here.</Text>
+        }
+        {
+          registerView &&
+          <Text style={styles.label}>Already have an account? Login here.</Text>
+        }
+      </TouchableOpacity>
     </View>
   );
 }
