@@ -6,6 +6,7 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  Button,
 } from 'react-native';
 import MovieRaterLogo from '../../assets/movie-rater-logo.png';
 
@@ -59,6 +60,28 @@ const MovieList = (props) => {
     </View>
   );
 }
+
+MovieList.navigationOptions = screenProps => ({
+  title: 'Movie List',
+  headerStyle: {
+    backgroundColor: 'orange',
+  },
+  headerTintColor: '#fff',
+  headerTitleStyle: {
+    fontWeight: 'bold',
+    fontSize: 24,
+  },
+  headerTitleAlign: 'center',
+  headerRight: () => (
+    <Button
+      title='Add New'
+      color='orange'
+      onPress={() => screenProps.navigation.navigate('Edit', {
+        movie: {title: '', description: ''},
+      })}
+    />
+  )
+});
 
 const styles = StyleSheet.create({
   container: {

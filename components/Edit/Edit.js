@@ -50,7 +50,7 @@ const Edit = (props) => {
 }
 
 Edit.navigationOptions = screenProps => ({
-  title: `Edit: ${screenProps.navigation.getParam('title')}`,
+  title: screenProps.navigation.getParam('title') ? `Edit: ${screenProps.navigation.getParam('title')}` : 'Add New Movie',
   headerStyle: {
     backgroundColor: 'orange',
   },
