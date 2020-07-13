@@ -77,7 +77,27 @@ Edit.navigationOptions = screenProps => ({
     fontSize: 24,
   },
   headerTitleAlign: 'center',
+  headerRight: () => (
+    <Button
+      title='Delete'
+      color='orange'
+      onPress={() => deleteMovie(screenProps)}
+    />
+  )
 });
+
+const deleteMovie = (props) => {
+  const movie = props.navigation.getParam('movie')
+  fetch(`${process.env.BASE_URL}/api/movies/${movie.id}/`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Token ${process.env.TOKEN}`,
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(() => props.navigation.navigate("MovieList"))
+    .catch(error => console.log(error))
+}
 
 const styles = StyleSheet.create({
   container: {

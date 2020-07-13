@@ -25,7 +25,7 @@ const MovieList = (props) => {
       .then(movies => setMovies(movies))
       .then(() => setLoading(false))
       .catch(error => console.log(error))
-  }, [])
+  })
 
   const selectedMovie = movie => {
     // Specify the component we want to pass our params to (the components in the AppNavigator in App.js
@@ -92,7 +92,6 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: '100%',
-    marginTop: 30,
   },
   item: {
     flex: 1,
