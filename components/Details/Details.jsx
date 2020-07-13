@@ -34,7 +34,14 @@ Details.navigationOptions = screenProps => ({
   },
   headerTitleAlign: 'center',
   headerRight: () => (
-    <Button title='Edit' color='orange' />
+    <Button
+      title='Edit'
+      color='orange'
+      onPress={() => screenProps.navigation.navigate('Edit', {
+        movie: screenProps.navigation.getParam('movie'),
+        title: screenProps.navigation.getParam('title'),
+      })}
+    />
   )
 });
 
