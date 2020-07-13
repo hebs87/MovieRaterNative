@@ -1,11 +1,33 @@
-import React from 'react';
-import {StyleSheet, Text, View, Button} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, Text, View, Button, Alert} from 'react-native';
 import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 import {faStar} from "@fortawesome/free-solid-svg-icons/faStar";
 
 const Details = (props) => {
   // We get the relevant prop (1st argument) and specify a default (2nd argument)
   const movie = props.navigation.getParam('movie', null);
+  const [stars, setStars] = useState(0)
+
+  const submitRating = () => {
+    if (stars > 0 && stars < 6) {
+      fetch(`${process.env.BASE_URL}/api/movies/${movie.id}/rate_movie/`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Token ${process.env.TOKEN}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          stars
+        })
+      })
+        .then(res => res.json())
+        .then(res => {
+          setStars(0);
+          Alert.alert(movie.title, res.message);
+        })
+        .catch(error => Alert.alert("Error", error))
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -18,6 +40,49 @@ const Details = (props) => {
         <Text style={styles.numRatings}>({movie.no_of_ratings})</Text>
       </View>
       <Text style={styles.description}>{movie.description}</Text>
+      <View
+        style={{borderBottomColor: '#fff', borderBottomWidth: 2}}
+      />
+      <Text style={styles.description}>Rate It!</Text>
+      <View style={styles.ratingContainer}>
+        <FontAwesomeIcon
+          style={stars > 0 ? styles.purple : styles.grey}
+          icon={faStar}
+          size={48}
+          onPress={() => setStars(1)}
+        />
+        <FontAwesomeIcon
+          style={stars > 1 ? styles.purple : styles.grey}
+          icon={faStar}
+          size={48}
+          onPress={() => setStars(2)}
+        />
+        <FontAwesomeIcon
+          style={stars > 2 ? styles.purple : styles.grey}
+          icon={faStar}
+          size={48}
+          onPress={() => setStars(3)}
+        />
+        <FontAwesomeIcon
+          style={stars > 3 ? styles.purple : styles.grey}
+          icon={faStar}
+          size={48}
+          onPress={() => setStars(4)}
+        />
+        <FontAwesomeIcon
+          style={stars > 4 ? styles.purple : styles.grey}
+          icon={faStar}
+          size={48}
+          onPress={() => setStars(5)}
+        />
+        <View>
+          <Button
+            title='Rate'
+            color='orange'
+            onPress={() => submitRating()}
+          />
+        </View>
+      </View>
     </View>
   );
 }
@@ -66,7 +131,10 @@ const styles = StyleSheet.create({
     color: 'orange',
   },
   grey: {
-    color: '#999'
+    color: '#999',
+  },
+  purple: {
+    color: 'purple',
   },
   numRatings: {
     marginLeft: 5,
