@@ -87,6 +87,13 @@ MovieList.navigationOptions = screenProps => ({
     fontSize: 24,
   },
   headerTitleAlign: 'center',
+  headerLeft: () => (
+    <Button
+      title='Logout'
+      color='orange'
+      onPress={() => logout(screenProps)}
+    />
+  ),
   headerRight: () => (
     <Button
       title='Add New'
@@ -97,6 +104,11 @@ MovieList.navigationOptions = screenProps => ({
     />
   )
 });
+
+const logout = async props => {
+  await AsyncStorage.removeItem('TOKEN');
+  props.navigation.navigate('Auth');
+}
 
 const styles = StyleSheet.create({
   container: {
