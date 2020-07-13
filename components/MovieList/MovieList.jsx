@@ -44,7 +44,7 @@ const MovieList = (props) => {
 
   const selectedMovie = movie => {
     // Specify the component we want to pass our params to (the components in the AppNavigator in App.js
-    props.navigation.navigate("Details", {movie, title: movie.title, TOKEN});
+    props.navigation.navigate("Details", {movie, title: movie.title});
   }
 
   return (

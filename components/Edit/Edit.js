@@ -1,18 +1,29 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, View, TextInput, Button} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, Text, View, TextInput, Button, AsyncStorage} from 'react-native';
 
 const Edit = (props) => {
   // We get the relevant prop (1st argument) and specify a default (2nd argument)
   const movie = props.navigation.getParam('movie', null);
   const [title, setTitle] = useState(movie.title);
   const [description, setDescription] = useState(movie.description);
+  const [TOKEN, setToken] = useState(null);
+
+  useEffect(() => {
+    getToken();
+  }, []);
+
+  const getToken = async () => {
+    const TOKEN = await AsyncStorage.getItem('TOKEN');
+    setToken(TOKEN);
+    if (!TOKEN) props.navigation.navigate('Auth');
+  }
 
   const saveMovie = () => {
     if (movie.id) {
       fetch(`${process.env.BASE_URL}/api/movies/${movie.id}/`, {
         method: 'PUT',
         headers: {
-          'Authorization': `Token ${process.env.TOKEN}`,
+          'Authorization': `Token ${TOKEN}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -21,13 +32,13 @@ const Edit = (props) => {
         })
       })
         .then(res => res.json())
-        .then(movie => props.navigation.navigate("Details", {movie, title: movie.title}))
+        .then(movie => props.navigation.navigate("Details", {movie, title: movie.title, TOKEN}))
         .catch(error => console.log(error))
     } else {
       fetch(`${process.env.BASE_URL}/api/movies/`, {
         method: 'POST',
         headers: {
-          'Authorization': `Token ${process.env.TOKEN}`,
+          'Authorization': `Token ${TOKEN}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -86,17 +97,20 @@ Edit.navigationOptions = screenProps => ({
   )
 });
 
-const deleteMovie = (props) => {
+const deleteMovie = async (props) => {
+  const TOKEN = await AsyncStorage.getItem('TOKEN');
   const movie = props.navigation.getParam('movie')
-  fetch(`${process.env.BASE_URL}/api/movies/${movie.id}/`, {
-    method: 'DELETE',
-    headers: {
-      'Authorization': `Token ${process.env.TOKEN}`,
-      'Content-Type': 'application/json'
-    }
-  })
-    .then(() => props.navigation.navigate("MovieList"))
-    .catch(error => console.log(error))
+  if (TOKEN) {
+    fetch(`${process.env.BASE_URL}/api/movies/${movie.id}/`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Token ${TOKEN}`,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(() => props.navigation.navigate("MovieList"))
+      .catch(error => console.log(error))
+  }
 }
 
 const styles = StyleSheet.create({

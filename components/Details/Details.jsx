@@ -1,19 +1,30 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, View, Button, Alert} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, Text, View, Button, Alert, AsyncStorage} from 'react-native';
 import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 import {faStar} from "@fortawesome/free-solid-svg-icons/faStar";
 
 const Details = (props) => {
   // We get the relevant prop (1st argument) and specify a default (2nd argument)
   const movie = props.navigation.getParam('movie', null);
-  const [stars, setStars] = useState(0)
+  const [stars, setStars] = useState(0);
+  const [TOKEN, setToken] = useState(null);
+
+  useEffect(() => {
+    getToken();
+  }, []);
+
+  const getToken = async () => {
+    const TOKEN = await AsyncStorage.getItem('TOKEN');
+    setToken(TOKEN);
+    if (!TOKEN) props.navigation.navigate('Auth');
+  }
 
   const submitRating = () => {
     if (stars > 0 && stars < 6) {
       fetch(`${process.env.BASE_URL}/api/movies/${movie.id}/rate_movie/`, {
         method: 'POST',
         headers: {
-          'Authorization': `Token ${process.env.TOKEN}`,
+          'Authorization': `Token ${TOKEN}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
